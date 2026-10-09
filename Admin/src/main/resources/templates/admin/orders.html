@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Đơn hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="p-3">
+<div th:replace="~{admin/header :: header}"></div>
+<div class="container-fluid mt-4">
+    <h2>Quản lý Đơn hàng</h2>
+    
+    <div class="table-responsive mt-3">
+        <table class="table table-hover align-middle"> <thead class="table-light">
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Khách hàng</th>
+                    <th>Email</th>
+                    <th>Trạng thái</th>
+                    <th>Tổng tiền</th>
+                    <th>Ngày đặt</th>
+                    <th style="width: 180px;">Thao tác</th> </tr>
+            </thead>
+            <tbody>
+                <tr th:each="o : ${orders}">
+                    <td><strong th:text="${o.id}"></strong></td>
+                    <td th:text="${o.user != null ? o.user.name : 'N/A'}"></td>
+                    <td th:text="${o.user != null ? o.user.email : 'N/A'}"></td>
+                    <td>
+                        <span class="badge"
+                            th:classappend="${o.status == 'pending' ? 'bg-warning text-dark' : (o.status == 'confirmed' ? 'bg-info text-dark' : (o.status == 'shipping' ? 'bg-primary' : (o.status == 'delivered' ? 'bg-success' : 'bg-danger')))}"
+                            th:text="${o.status == 'pending' ? 'Chưa xử lý' : (o.status == 'confirmed' ? 'Đã xác nhận' : (o.status == 'shipping' ? 'Đang giao' : (o.status == 'delivered' ? 'Đã giao' : 'Đã hủy')))}"></span>
+                    </td>
+                    <td><strong th:text="${#numbers.formatDecimal(o.totalPrice, 0, 'COMMA', 0, 'POINT')}"></strong> đ</td>
+                    
+                    <td th:text="${#temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a th:href="@{'/admin/orders/' + ${o.id}}" class="btn btn-sm btn-info text-white">Xem</a>
+                            
+                            
+                            
+                            <form th:action="@{'/admin/orders/' + ${o.id} + '/delete'}" method="post" style="display:inline" onsubmit="return confirm('Xóa đơn hàng?');">
+                                <button class="btn btn-sm btn-danger">Xóa</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${orders.isEmpty()}" class="alert alert-info">Không có đơn hàng nào.</div>
+</div>
+<div th:replace="~{admin/footer :: footer}"></div>
+</body>
+</html>

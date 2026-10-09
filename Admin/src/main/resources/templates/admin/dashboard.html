@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .stat-card { 
+            border: none; 
+            border-radius: 10px; 
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.primary { border-left: 5px solid #0d6efd; }
+        .stat-card.success { border-left: 5px solid #198754; }
+        .stat-card.info { border-left: 5px solid #0dcaf0; }
+        .stat-card.warning { border-left: 5px solid #ffc107; }
+        .stat-value { font-size: 2.2rem; font-weight: 700; color: #212529; }
+        .stat-label { color: #6c757d; font-size: 0.95rem; font-weight: 600; margin-bottom: 5px; }
+        .card { border-radius: 10px; border: none; }
+        .card-header { background-color: #fff; border-bottom: 1px solid #efefef; font-weight: bold; }
+        .table th { font-weight: 600; color: #495057; }
+        .icon-shape {
+            width: 48px;
+            height: 48px;
+            background-color: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{admin/header :: header}"></div>
+
+<div class="container-fluid mt-4 px-4">
+    
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stat-card primary shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Tổng người dùng</div>
+                        <div class="stat-value" id="userCount">-</div>
+                    </div>
+                    <div class="icon-shape text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16"><path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724C2.312 10.629 3.282 10 5 10q.413 0 .82.043zm-1.16-6a2 2 0 1 1-4 0 2 2 0 0 1 4 0m1 1a3 3 0 1 0-6 0 3 3 0 0 0 6 0"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stat-card success shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Tổng đơn hàng</div>
+                        <div class="stat-value" id="orderCount">-</div>
+                    </div>
+                    <div class="icon-shape text-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a1 1 0 1 0 0 2 1 1 0 0 0 0-2m7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-7 1a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m7 0a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stat-card info shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Tổng sản phẩm</div>
+                        <div class="stat-value" id="productCount">-</div>
+                    </div>
+                    <div class="icon-shape text-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16"><path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.744V6.838L1 4.24v7.922zm-5.717-10.3 6.5-2.6a.5.5 0 0 1 .372 0l6.5 2.6a.5.5 0 0 1 0 .928l-6.5 2.6a.5.5 0 0 1-.372 0l-6.5-2.6a.5.5 0 0 1 0-.928z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stat-card warning shadow-sm">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Doanh thu tháng này</div>
+                        <div class="stat-value" id="revenueThisMonth">-</div>
+                    </div>
+                    <div class="icon-shape text-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16"><path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.118-.844 2.118-1.968 0-1.107-.713-1.67-2.118-2.013V4.898c.691.059 1.163.416 1.194.945h1c-.039-.978-.83-1.67-2.194-1.785V3.2h-.6v.71c-1.402.1-2.135.852-2.135 1.967 0 1.154.729 1.685 2.135 2.04v3.515c-.719-.075-1.179-.477-1.24-1.022zm2.782-2.555c1.02.284 1.41.565 1.41 1.107 0 .577-.442.893-1.41.956V6.956zm-.6-2.11c-.93.064-1.334.365-1.334.938 0 .542.38.825 1.334 1.102V4.846z"/><path d="M4 15a1 1 0 1 1 0-2 1 1 0 0 1 0 2m0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4m8-1a1 1 0 1 1 0-2 1 1 0 0 1 0 2m0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4M8.949 1.668a.5.5 0 0 0-.898 0l-5.654 11A.5.5 0 0 0 2.843 13h10.314a.5.5 0 0 0 .446-.732zm-.449 1.343 4.966 9.671H2.534z"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header py-3">
+                    <h6 class="mb-0 text-secondary">📈 Phân tích Doanh thu 6 tháng gần nhất</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" height="40"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-secondary">👥 Người dùng mới đăng ký</h6>
+                    <a href="/admin/users" class="btn btn-sm btn-outline-primary px-3 rounded-pill">Xem tất cả</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="usersTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3">ID</th>
+                                <th>Tên người dùng</th>
+                                <th class="pe-3">Địa chỉ Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4">Đang tải cấu trúc dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-secondary">🛒 Đơn hàng mới phát sinh</h6>
+                    <a href="/admin/orders" class="btn btn-sm btn-outline-primary px-3 rounded-pill">Xem tất cả</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="ordersTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3">Mã ĐH</th>
+                                <th>Khách hàng</th>
+                                <th>Trạng thái</th>
+                                <th class="pe-3">Tổng tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Đang tải cấu trúc dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center py-3">
+                    <h6 class="mb-0 text-secondary">🏆 Top 10 sản phẩm có doanh số bán chạy nhất</h6>
+                    <a href="/admin/products" class="btn btn-sm btn-outline-primary px-3 rounded-pill">Xem tất cả</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="topProductsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3" style="width: 70px;">Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục mục</th>
+                                <th>Đơn giá</th>
+                                <th class="text-center">Số lượng đã bán</th>
+                                <th class="pe-3">Trạng thái kho</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">Đang tải cấu trúc dữ liệu...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{admin/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    // ==========================================
+    // ĐÃ FIX: Đồng bộ luồng xử lý đồng nhất 100% bằng Async / Await
+    // ==========================================
+    async function loadDashboardData() {
+        try {
+            // 1. Tải số liệu thống kê cơ bản
+            const statsRes = await fetch('/admin/api/stats');
+            const statsData = await statsRes.json();
+            document.getElementById('userCount').innerText = statsData.userCount ?? 0;
+            document.getElementById('orderCount').innerText = statsData.orderCount ?? 0;
+            document.getElementById('revenueThisMonth').innerText = formatCurrency(statsData.salesThisMonth || statsData.revenueThisMonth || 0);
+
+            // 2. Tải danh sách người dùng mới (Giới hạn hiển thị 5 bản ghi)
+            const usersRes = await fetch('/admin/api/users');
+            const usersData = await usersRes.json();
+            const usersTbody = document.querySelector('#usersTable tbody');
+            if (usersTbody) {
+                usersTbody.innerHTML = usersData.slice(0, 5).map(u => `
+                    <tr>
+                        <td class="ps-3"><strong>#${u.id}</strong></td>
+                        <td class="fw-bold">${u.name || 'N/A'}</td>
+                        <td class="pe-3 text-muted">${u.email || 'N/A'}</td>
+                    </tr>
+                `).join('') || '<tr><td colspan="3" class="text-center py-3 text-muted">Không có dữ liệu người dùng</td></tr>';
+            }
+
+            // 3. ĐÃ FIX: Tương thích thông minh với cả định dạng /orders (Entity) và /orders-summary (Map)
+            const ordersRes = await fetch('/admin/api/orders');
+            const ordersData = await ordersRes.json();
+            const ordersTbody = document.querySelector('#ordersTable tbody');
+            if (ordersTbody) {
+                const statusBadge = {
+                    pending: 'warning text-dark', confirmed: 'info text-dark',
+                    processing: 'info text-dark', shipping: 'primary',
+                    shipped: 'primary', delivered: 'success',
+                    completed: 'success', cancelled: 'danger'
+                };
+                ordersTbody.innerHTML = ordersData.slice(0, 5).map(o => {
+                    // Tự động phân tích trường dữ liệu dựa trên cấu trúc API trả về thực tế
+                    const orderId = o.id ?? '-';
+                    const customerName = o.userName ?? (o.user != null ? o.user.name : 'Khách');
+                    const orderStatus = o.status ?? 'pending';
+                    const finalPrice = o.totalPrice ?? 0;
+
+                    return `
+                        <tr>
+                            <td class="ps-3"><strong>#${orderId}</strong></td>
+                            <td>${customerName}</td>
+                            <td><span class="badge rounded-pill bg-${statusBadge[orderStatus] || 'secondary'}">${translateStatus(orderStatus)}</span></td>
+                            <td class="pe-3 fw-bold text-success">${formatCurrency(finalPrice)}</td>
+                        </tr>
+                    `;
+                }).join('') || '<tr><td colspan="4" class="text-center py-3 text-muted">Không có dữ liệu đơn hàng</td></tr>';
+            }
+
+            // 4. Tải tổng kho và bóc tách bảng Top 10 sản phẩm bán chạy nhất
+            const inventoryRes = await fetch('/admin/api/inventory');
+            const inventoryData = await inventoryRes.json();
+            document.getElementById('productCount').innerText = inventoryData.length;
+            
+            const productsTbody = document.querySelector('#topProductsTable tbody');
+            if (productsTbody) {
+                // Sắp xếp giảm dần theo trường 'sold' của Entity
+                const topProducts = inventoryData.sort((a, b) => (b.sold || 0) - (a.sold || 0)).slice(0, 10);
+                productsTbody.innerHTML = topProducts.map(p => `
+                    <tr>
+                        <td class="ps-3"><img src="${p.image || '/images/no-image.png'}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;" onerror="this.src='/images/no-image.png'" /></td>
+                        <td><strong>${p.name || 'N/A'}</strong></td>
+                        <td><span class="badge bg-light text-dark border">${p.category?.name || 'Chưa phân loại'}</span></td>
+                        <td class="fw-bold text-dark">${formatCurrency(p.price)}</td>
+                        <td class="text-center"><span class="badge bg-success px-2.5 py-1.5 fs-6">${p.sold || 0}</span></td>
+                        <td class="pe-3"><span class="badge rounded-pill ${(p.stock || 0) <= 5 ? 'bg-danger' : ((p.stock || 0) <= 20 ? 'bg-warning text-dark' : 'bg-info text-dark')}">Còn lại: ${p.stock || 0}</span></td>
+                    </tr>
+                `).join('') || '<tr><td colspan="6" class="text-center py-3 text-muted">Không có dữ liệu kho</td></tr>';
+            }
+
+            // 5. ĐÃ FIX: Tải và bóc tách dữ liệu mảng an toàn để dựng biểu đồ doanh thu Chart.js
+            const revenueRes = await fetch('/admin/api/revenue-months');
+            const revenueData = await revenueRes.json();
+            renderRevenueChart(revenueData);
+
+        } catch (error) {
+            console.error("Lỗi đồng bộ nạp dữ liệu Dashboard:", error);
+        }
+    }
+
+    // Hàm dựng khung đồ thị đường
+    function renderRevenueChart(data) {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        
+        // ĐÃ FIX AN TOÀN: Kiểm tra nếu API trả về Object {labels, data} hoặc dạng Map ngầm để bóc tách key-value
+        let labels = [];
+        let values = [];
+        
+        if (data.labels && data.data) {
+            labels = data.labels;
+            values = data.data;
+        } else {
+            labels = Object.keys(data);
+            values = Object.values(data);
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: values,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.06)',
+                    tension: 0.35,
+                    fill: true,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#0d6efd',
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f1f1f1' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // Các hàm Helper xử lý chuỗi và định dạng hiển thị dữ liệu
+    function formatCurrency(v) {
+        if (!v) return '0 đ';
+        try {
+            const num = typeof v === 'string' ? parseFloat(v) : v;
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
+        } catch (e) { return v + ' đ'; }
+    }
+
+    // Chuẩn hóa bộ nhãn dịch trạng thái đơn hàng đồng bộ
+    function translateStatus(s) {
+        return {
+            'pending': 'Chờ xử lý',
+            'confirmed': 'Đã xác nhận',
+            'processing': 'Đang xử lý',
+            'shipping': 'Đang giao',
+            'shipped': 'Đang gửi',
+            'delivered': 'Đã giao',
+            'completed': 'Hoàn thành',
+            'cancelled': 'Đã hủy'
+        }[s] || s;
+    }
+
+    // Kích hoạt nạp luồng tập trung khi tài liệu HTML đã sẵn sàng cấu trúc cây DOM
+    window.addEventListener('DOMContentLoaded', loadDashboardData);
+</script>
+</body>
+</html>
